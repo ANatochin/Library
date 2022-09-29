@@ -1,20 +1,22 @@
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.ToDoubleBiFunction;
+
 
 public class LibraryHandler {
-    private Library library;
+    private final Library library;
+
+    private Scanner scanner;
 
     public LibraryHandler(Library library) {
         this.library = library;
     }
 
     public void execute() {
-        this.libraryMenu();
+        libraryMenu();
 
         while (true) {
-            Scanner scanner = new Scanner(System.in);
+            scanner = new Scanner(System.in);
             System.out.print("\nOption or EXIT :");
             String input = scanner.nextLine();
 
@@ -23,38 +25,16 @@ public class LibraryHandler {
             }
 
             switch (input) {
-
-                case "1":
-                    printLibBookList();
-                    break;
-
-                case "2":
-                    printReadersList();
-                    break;
-
-                case "3":
-                    addReader(scanner);
-                    break;
-
-                case "4":
-                    addBook(scanner);
-                    break;
-
-                case "5":
-                    borrowBook(scanner);
-                    break;
-
-                case "6":
-                    returnBook(scanner);
-                    break;
-
-                case "7":
-                    printBorrowedByBookId(scanner);
-                    break;
-
-                case "8":
-                    printCurrentBookReader(scanner);
-                    break;
+                case "1" -> printLibBookList();
+                case "2" -> printReadersList();
+                case "3" -> addReader();
+                case "4" -> addBook();
+                case "5" -> borrowBook();
+                case "6" -> returnBook();
+                case "7" -> printBorrowedBooksByReaderId();
+                case "8" -> printCurrentBookReader();
+                case "0" -> libraryMenu();
+                default -> System.out.println("Type 0 to get menu or EXIT to finish");
             }
         }
     }
@@ -92,42 +72,40 @@ public class LibraryHandler {
             }
         }
 
-        protected void addReader(Scanner scanner){
+        protected void addReader(){
             System.out.print("Please enter new reader full name: ");
             String readerName = scanner.nextLine();
             this.library.addReader(readerName);
         }
 
-        protected void addBook(Scanner scanner){
+        protected void addBook(){
             System.out.print("Please enter new book name and author, separated by \"/\"");
-            String book = scanner.nextLine();
-            String[] bookData = book.split("/");
-
-            this.library.addBook(bookData[0].trim(), bookData[1].trim());
+            String bookNameAuthor = scanner.nextLine();
+            library.addBook(bookNameAuthor);
         }
 
-        protected void borrowBook(Scanner scanner){
+        protected void borrowBook(){
             System.out.print("Enter reader ID and book ID, separated by \"/\"");
             String inputtedIDs = scanner.nextLine();
             String[] ids = inputtedIDs.split("/");
             int readerId = Integer.parseInt(ids[0].trim());
             int bookId = Integer.parseInt(ids[1].trim());
 
-            if (!this.library.getReaders().isEmpty()) {
+            if (!library.getReaders().isEmpty()) {
 
-                if (!this.library.isReaderRegistered(readerId)) {
+                if (!library.isReaderRegistered(readerId)) {
                     System.out.println("No reader with this ID, add new reader by choosing option [3]");
-                } else if (!this.library.isBookInLibrary(bookId)) {
+                } else if (!library.isBookInLibrary(bookId)) {
                     System.out.println("Such book is not available in library, to recheck use option [1]");
-                } else if (this.library.getBookByID(bookId).getBorrowed()) {
+                } else if (library.getBookByID(bookId).getBorrowed()) {
                     System.out.println("This book is borrowed");
                 } else {
-                    this.library.addBorrowedBook(readerId, bookId);
+                    library.addBorrowedBook(readerId, bookId);
                 }
             }
         }
 
-        protected void returnBook(Scanner scanner){
+        protected void returnBook(){
             System.out.print("Input book ID: ");
             int bookId = scanner.nextInt();
 
@@ -136,15 +114,13 @@ public class LibraryHandler {
             }else{
                 System.out.println("Such book ID is not registered");
             }
-
-
         }
 
-        protected void printBorrowedByBookId(Scanner scanner){
+        protected void printBorrowedBooksByReaderId(){
             System.out.print("Input reader ID: ");
             int readerId = scanner.nextInt();
             if(library.isBookInLibrary(readerId)){
-                for (Map.Entry<Reader, List<Book>> entry : this.library.getReadersInfo().entrySet()) {
+                for (Map.Entry<Reader, List<Book>> entry : library.getReadersInfo().entrySet()) {
                     if (entry.getKey().getId() == readerId) {
                         System.out.println(entry.getKey() + " :\n" + entry.getValue());
                     }
@@ -154,7 +130,7 @@ public class LibraryHandler {
             }
         }
 
-        protected void printCurrentBookReader(Scanner scanner){
+        protected void printCurrentBookReader(){
             System.out.print("Input book ID: ");
             int bookId = scanner.nextInt();
 
@@ -163,7 +139,6 @@ public class LibraryHandler {
             }else{
                 System.out.println("Such book is not available in library, to recheck use option [1]");
             }
-
         }
 
 }

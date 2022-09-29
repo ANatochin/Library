@@ -1,17 +1,20 @@
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Book {
-    private int id;
-    private String bookName;
-    private String author;
+    static final AtomicInteger bId = new AtomicInteger();
+    private final int bookId;
+    private final String bookName;
+    private final String author;
     private boolean borrowed;
 
-    public Book(int id,String bookName, String author){
-        this.id = id;
+    public Book(String bookName, String author){
         this.bookName = bookName;
         this.author = author;
         this.borrowed = false;
+        this. bookId = bId.incrementAndGet();
     }
     public int getId(){
-        return this.id;
+        return this.bookId;
     }
 
     public String getBookName() {
@@ -36,7 +39,6 @@ public class Book {
         } else {
             book = this.getBookName() + ", author: " + this.getAuthor() + " /Book.ID-" + this.getId()+"/";
         }
-
         return book;
     }
 }

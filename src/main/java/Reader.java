@@ -1,21 +1,21 @@
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Reader {
-    private int id;
-    private String name;
+    static final AtomicInteger rId = new AtomicInteger();
+    private final int readerId;
+    private final String name;
 
-    public Reader(int id, String name){
-        this.id = id;
+    public Reader (String name) {
         this.name = name;
-    }
-    public int getId(){
-        return this.id;
+        this.readerId = rId.incrementAndGet();
     }
 
-    public String getName() {
-        return name;
+    public int getId() {
+        return this.readerId;
     }
 
     @Override
-    public String toString(){
-        return this.getName() + "/Reader ID-" + this.getId() + "/";
+    public String toString() {
+        return this.name + "/Reader ID-" + this.getId() + "/";
     }
 }
