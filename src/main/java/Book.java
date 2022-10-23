@@ -1,24 +1,25 @@
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Book {
     static final AtomicInteger bId = new AtomicInteger();
-    private final int bookId;
-    private final String bookName;
+    private final int id;
+    private final String name;
     private final String author;
     private boolean borrowed;
 
     public Book(String bookName, String author){
-        this.bookName = bookName;
+        this.name = bookName;
         this.author = author;
         this.borrowed = false;
-        this. bookId = bId.incrementAndGet();
+        this.id = bId.incrementAndGet();
     }
     public int getId(){
-        return this.bookId;
+        return id;
     }
 
     public String getBookName() {
-        return bookName;
+        return name;
     }
 
     public String getAuthor() {
@@ -28,7 +29,7 @@ public class Book {
         this.borrowed = borrow;
     }
     public boolean getBorrowed(){
-        return this.borrowed;
+        return borrowed;
     }
 
     @Override
@@ -41,4 +42,27 @@ public class Book {
         }
         return book;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == null){
+            return false;
+        }
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Book)){
+            return false;
+        }
+        Book compared = (Book)o;
+
+        return compared.getId()==this.getId() && compared.getBookName().equals(this.getBookName())
+                && compared.getAuthor().equals(this.getAuthor());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id,name,author);
+    }
+
 }

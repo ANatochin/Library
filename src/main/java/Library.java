@@ -19,7 +19,14 @@ public class Library {
        return books.stream().filter(b -> b.getId()==bookId).findFirst().get();
     }
     public void addReader(String name){
-        registeredReaders.put(new Reader(name), new ArrayList<>());
+
+        List<Reader> readers = registeredReaders.keySet().stream().filter(r -> r.getName().equals(name)).toList();
+
+        if(!readers.isEmpty()){
+            System.out.printf("Reader %s is already in list\n", name);
+        } else {
+            registeredReaders.put(new Reader(name), new ArrayList<>());
+        }
     }
 
     public void printBookList(){

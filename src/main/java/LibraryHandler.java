@@ -75,7 +75,7 @@ public class LibraryHandler {
         protected void addReader(){
             System.out.print("Please enter new reader full name: ");
             String readerName = scanner.nextLine();
-            this.library.addReader(readerName);
+            library.addReader(readerName);
         }
 
         protected void addBook(){
