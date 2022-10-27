@@ -97,7 +97,7 @@ public class LibraryHandler {
                     System.out.println("No reader with this ID, add new reader by choosing option [3]");
                 } else if (!library.isBookInLibrary(bookId)) {
                     System.out.println("Such book is not available in library, to recheck use option [1]");
-                } else if (library.getBookByID(bookId).getBorrowed()) {
+                } else if (library.getBookByID(bookId).get().getBorrowed()) {
                     System.out.println("This book is borrowed");
                 } else {
                     library.addBorrowedBook(readerId, bookId);

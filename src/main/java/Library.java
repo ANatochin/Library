@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.*;
 
 
@@ -15,8 +16,8 @@ public class Library {
         books.add(new Book(bookData[0].trim(), bookData[1].trim()));
     }
 
-    public Book getBookByID(int bookId){
-       return books.stream().filter(b -> b.getId()==bookId).findFirst().get();
+    public Optional<Book> getBookByID(int bookId){
+       return books.stream().filter(b -> b.getId()==bookId).findFirst();
     }
     public void addReader(String name){
 
@@ -48,10 +49,12 @@ public class Library {
 
     public void addBorrowedBook(int readerId, int bookId){
         for(Map.Entry<Reader, List<Book>> entry : registeredReaders.entrySet()){
-            if(entry.getKey().getId() == readerId){
-                Book book = getBookByID(bookId);
+            if(entry.getKey().getId() == readerId && getBookByID(bookId).isPresent()){
+                Book book = getBookByID(bookId).get();
                 entry.getValue().add(book);
                 book.setBorrowed(true);
+            } else {
+                System.out.println("No such reader or book registered in the library");
             }
         }
     }
@@ -64,12 +67,12 @@ public class Library {
     }
 
     public void returnBookByID(int bookId){
-        if (getBookByID(bookId).getBorrowed()) {
+        if (getBookByID(bookId).isPresent() && getBookByID(bookId).get().getBorrowed()) {
             System.out.println("return");
-            getBookByID(bookId).setBorrowed(false);
+            getBookByID(bookId).get().setBorrowed(false);
 
             for (Map.Entry<Reader, List<Book>> entry : getReadersInfo().entrySet()) {
-                entry.getValue().removeIf(book->book.getId()==bookId);
+                entry.getValue().removeIf(b->b.getId()==bookId);
             }
         } else {
             System.out.println("This book is in library.");
@@ -77,7 +80,7 @@ public class Library {
     }
 
     public void printBookReader(int bookId) {
-        if (getBookByID(bookId).getBorrowed()) {
+        if (getBookByID(bookId).isPresent() && getBookByID(bookId).get().getBorrowed()) {
             for (Map.Entry<Reader, List<Book>> entry : getReadersInfo().entrySet()) {
                 for (Book book1 : entry.getValue()) {
                     if (book1.getId() == bookId) {
